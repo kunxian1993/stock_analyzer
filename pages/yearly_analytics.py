@@ -77,7 +77,7 @@ layout = html.Div(
                                                         id='yaxis-column-denominator',
                                                         value='Total Revenue',
                                                         className="dropdown"
-                                                )                                                
+                                                ),                                             
                                         ],
                                         style={'width': '30%', 'height': '25%', 'font-size': '16px', 'margin-top': '5px'}
                                 )
@@ -103,6 +103,7 @@ layout = html.Div(
 @callback(
     Output('yaxis-column', 'options'),
     Output('yaxis-column-denominator', 'options'),
+    Output('yaxis-column-denominator', 'value'),
     Output('stock-data', 'data'),
     Input('text-submit-button-A', 'n_clicks'),
     Input('text-submit-button-B', 'n_clicks'),
@@ -121,6 +122,26 @@ def update_dropdown(n_clicks_A, n_clicks_B, selected_stock_A, selected_stock_B):
                                 df1 = df1.transpose()
                                 df1['Date']=df1.index
                                 df1['Ticker']=selected_stock
+
+                                df1['Year'] = df1['Date'].dt.year
+                                df1['Year-Month'] = df1['Date'].dt.year.astype(str) + '-' + df1['Date'].dt.month.astype(str)
+                                
+                                print(df1)
+
+                                # get historical stock price
+                                hist_price = stock_object.history(start=f"{df1['Year'].min()}-01-01", end=f"{df1['Year'].max()}-12-31", interval="1wk")
+                                hist_price = hist_price.reset_index()
+                                hist_price['Year-Month'] = hist_price['Date'].dt.year.astype(str) + '-' + hist_price['Date'].dt.month.astype(str)
+
+                                # aggregate to monthly average price
+                                table = pd.pivot_table(hist_price, values=['Close', 'Volume'], index=['Year-Month'], aggfunc={'mean'})
+                                table.columns = table.columns.droplevel(1)
+
+                                # merge price with income statement
+                                df1 = df1.merge(table, how='left', on=['Year-Month'])
+                                
+                                print(df1)
+
                                 df = pd.concat([df,df1])
 
 
@@ -131,7 +152,7 @@ def update_dropdown(n_clicks_A, n_clicks_B, selected_stock_A, selected_stock_B):
                 # convert df to json for keeping in dcc store
                 stock_data = df.to_dict('records')
 
-                return options, options, stock_data
+                return options, options, 'None', stock_data
 
 # callback for user interaction
 @callback(
