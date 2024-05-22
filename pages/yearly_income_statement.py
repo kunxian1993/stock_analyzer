@@ -75,7 +75,7 @@ layout = html.Div(
                                                 html.Div(children="Denominator", className="menu-title"),
                                                 dcc.Dropdown(
                                                         id='yaxis-column-denominator',
-                                                        value='Total Revenue',
+                                                        value='None',
                                                         className="dropdown"
                                                 ),                                             
                                         ],
@@ -181,6 +181,9 @@ def update_graph(n_clicks_A, n_clicks_B, stock_data, selected_metric, selected_d
                         df[title] = df[selected_metric]/df[selected_denominator]
                 
                 df.sort_values(by=['Ticker', 'Date'], ascending=True, inplace=True)
+
+                # exclude blank rows
+                df = df[df[title].notnull()]
 
                 # plot charts
                 fig = px.bar(df, x="Year", y=title, color="Ticker", barmode="group")
