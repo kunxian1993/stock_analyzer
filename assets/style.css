@@ -1,0 +1,113 @@
+body {
+    font-family: "Lato", sans-serif;
+    margin: 0;
+    background-color: #F7F7F7;
+}
+
+.header {
+    background-color: #222222;
+    height: 288px;
+    padding: 16px 0 0 0;
+}
+
+.header-emoji {
+    font-size: 48px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.header-title {
+    color: #FFFFFF;
+    font-size: 48px;
+    font-weight: bold;
+    text-align: center;
+    margin: 0 auto;
+}
+
+.header-description {
+    color: #CFCFCF;
+    margin: 4px auto;
+    text-align: center;
+    max-width: 384px;
+}
+
+.nav-bar {
+    background-color: #807575;
+    text-align: center;
+}
+
+.wrapper {
+    margin-right: auto;
+    margin-left: auto;
+    max-width: 1248px;
+    padding-right: 10px;
+    padding-left: 10px;
+    margin-top: 32px;
+}
+
+.card {
+    margin-bottom: 24px;
+    box-shadow: 0 4px 6px 0 rgba(0, 0, 0, 0.18);
+}
+
+.menu {
+    height: 112px;
+    width: 1200px;
+    max-width: 95%;
+    display: flex;
+    justify-content: space-evenly;
+    padding-top: 24px;
+    padding-left: 24px;
+    padding-right: 24px;
+    padding-bottom: 12px;
+    margin: -80px auto 0px auto;
+    background-color: #FFFFFF;
+    box-shadow: 0 4px 6px 0 rgba(0, 0, 0, 0.18);
+}
+
+.Submit-button {
+    margin-top: 5px; 
+    font-size: 16px; 
+}
+
+.Input-box {
+    width: 70%; 
+    height: 32px; 
+    font-size: 16px; 
+    border: 1px solid #ccc; 
+    border-radius: 4px;
+    padding-left: 10px;
+}
+
+.Select-control {
+    width: 90%;
+    height: 32px;
+}
+
+.Select--single > .Select-control .Select-value, .Select-placeholder {
+    line-height: 32px;
+}
+
+.Select--multi .Select-value-label {
+    line-height: 32px;
+}
+
+.menu-title {
+    margin-bottom: 6px;
+    font-weight: bold;
+    font-size: 16px; 
+    color: #079A82;
+}
+
+.table-card {
+    margin-right: auto;
+    margin-left: auto;
+    max-width: 1248px;
+    padding-right: 10px;
+    padding-left: 10px;
+    margin-top: 32px;
+    margin-bottom: 24px;
+    display: flex;
+    justify-content: space-evenly;
+    box-shadow: 0 4px 6px 0 rgba(0, 0, 0, 0.18);
+}
