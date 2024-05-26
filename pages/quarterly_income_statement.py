@@ -85,15 +85,15 @@ layout = html.Div(
                         className="menu"
                 ),
                 html.Div(
+                        html.Div(dash_table.DataTable(id='growth-table-q', merge_duplicate_headers=True), className='card'),
+                        className='wrapper'
+                ),
+                html.Div(
                         html.Div(dcc.Graph(id='stock-bar-chart-q'), className="card"),
                         className="wrapper"
                 ),
                 html.Div(
                         html.Div(dcc.Graph(id='stock-trend-chart-q'), className='card'),
-                        className='wrapper'
-                ),
-                html.Div(
-                        html.Div(dash_table.DataTable(id='growth-table-q'), className='card'),
                         className='wrapper'
                 )
         ]
@@ -153,6 +153,7 @@ def update_dropdown(n_clicks_A, n_clicks_B, selected_stock_A, selected_stock_B):
     Output('stock-bar-chart-q', 'figure'),
     Output('stock-trend-chart-q', 'figure'),
     Output('growth-table-q', 'data'),
+    Output('growth-table-q', 'style_data_conditional'),
     Input('text-submit-button-A-q', 'n_clicks'),
     Input('text-submit-button-B-q', 'n_clicks'),
     Input('stock-data-q', 'data'),
@@ -183,15 +184,54 @@ def update_graph(n_clicks_A, n_clicks_B, stock_data, selected_metric, selected_d
                 fig = px.bar(df, x="Quarter", y=title, color="Ticker", barmode="group")
                 fig.update_xaxes(type='category')
                 fig2 = px.line(df,x='Quarter',y=title, color="Ticker", markers=True)
-                
-                # calculate % change
-                df_table=df.pivot(index='Date', columns='Ticker', values=title)
-                df_table['Quarter']=df_table.index
-                df['% Change'] = df[title].pct_change()
-                df['% Change'] = df['% Change'].map('{:.2%}'.format)
-                df_table = df[['Ticker','Quarter',title,'% Change']]
 
-                return fig, fig2, df_table.to_dict('records')
+                # get '% Change' by group
+                df2 = df[['Ticker','Quarter',title]].set_index(['Quarter','Ticker']).groupby('Ticker').pct_change()
+                df2 = df2.rename(columns={title: '% Change'})
+
+                # merge back to raw data to get metric values and pivot
+                df2 = df2.merge(df, how='left', on=['Quarter','Ticker'])
+                df_table=df2.pivot(index='Quarter', columns='Ticker', values=[title, '% Change'])
+
+                stock_A = df_table.columns[0][1]
+                stock_B = df_table.columns[1][1]
+
+                # combine multi level columns to single level
+                df_table.columns = df_table.columns.map(' - '.join).str.strip(' - ')
+                
+                # conditional format for table
+                conditional_format = [
+                                        {
+                                        'if': {
+                                                'filter_query': '{% Change - ' + stock_A + '} > 0',
+                                                'column_id': f"% Change - {stock_A}"
+                                        },
+                                        'color': '#00B050'
+                                        },
+                                                                                {
+                                        'if': {
+                                                'filter_query': '{% Change - ' + stock_A + '} < 0',
+                                                'column_id': f"% Change - {stock_A}"
+                                        },
+                                        'color': '#FF0000'
+                                        },
+                                        {
+                                        'if': {
+                                                'filter_query': '{% Change - ' + stock_B + '} > 0',
+                                                'column_id': f"% Change - {stock_B}"
+                                        },
+                                        'color': '#00B050'
+                                        },
+                                                                                {
+                                        'if': {
+                                                'filter_query': '{% Change - ' + stock_B + '} < 0',
+                                                'column_id': f"% Change - {stock_B}"
+                                        },
+                                        'color': '#FF0000'
+                                        }
+                                        ]
+
+                return fig, fig2, df_table.reset_index().to_dict('records'), conditional_format
 
 # if __name__ == '__main__':
 #     app.run(debug=True)
