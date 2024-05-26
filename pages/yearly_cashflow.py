@@ -126,8 +126,6 @@ def update_dropdown(n_clicks_A, n_clicks_B, selected_stock_A, selected_stock_B):
                                 df1['Year'] = df1['Date'].dt.year
                                 df1['Year-Month'] = df1['Date'].dt.year.astype(str) + '-' + df1['Date'].dt.month.astype(str)
                                 
-                                print(df1)
-
                                 # get historical stock price
                                 hist_price = stock_object.history(start=f"{df1['Year'].min()}-01-01", end=f"{df1['Year'].max()}-12-31", interval="1wk")
                                 hist_price = hist_price.reset_index()
@@ -140,8 +138,6 @@ def update_dropdown(n_clicks_A, n_clicks_B, selected_stock_A, selected_stock_B):
                                 # merge price with income statement
                                 df1 = df1.merge(table, how='left', on=['Year-Month'])
                                 
-                                print(df1)
-
                                 df = pd.concat([df,df1])
 
 
