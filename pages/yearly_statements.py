@@ -77,7 +77,7 @@ layout = html.Div(
                                                         id='yaxis-column-denominator',
                                                         value='None',
                                                         className="dropdown"
-                                                ),                                             
+                                                )                                             
                                         ],
                                         style={'width': '30%', 'height': '25%', 'font-size': '16px', 'margin-top': '5px'}
                                 )
@@ -85,7 +85,7 @@ layout = html.Div(
                         className="menu"
                 ),
                 html.Div(
-                        html.Div(dash_table.DataTable(id='growth-table', merge_duplicate_headers=True), className='card'),
+                        html.Div(dash_table.DataTable(id='growth-table', merge_duplicate_headers=True, style_cell={'textAlign': 'center'}), className='card'),
                         className='wrapper'
                 ),
                 html.Div(
@@ -118,10 +118,15 @@ def update_dropdown(n_clicks_A, n_clicks_B, selected_stock_A, selected_stock_B):
                 for selected_stock in [selected_stock_A, selected_stock_B]:
                         if selected_stock != None:
                                 stock_object = yf.Ticker(selected_stock)
-                                df1 = stock_object.income_stmt
 
+                                # pull financial statements
+                                s_is = stock_object.income_stmt
+                                s_bs = stock_object.balancesheet
+                                s_cf = stock_object.cashflow
                                 
-                                df1 = df1.transpose()
+                                # combine statements and transpose
+                                df1 = pd.concat([s_is,s_bs,s_cf]).transpose()
+
                                 df1['Date']=df1.index
                                 df1['Ticker']=selected_stock
 
@@ -196,6 +201,8 @@ def update_graph(n_clicks_A, n_clicks_B, stock_data, selected_metric, selected_d
                 # merge back to raw data to get metric values and pivot
                 df2 = df2.merge(df, how='left', on=['Year','Ticker'])
                 df_table=df2.pivot(index='Year', columns='Ticker', values=[title, '% Change'])
+
+                # round values to 2 d.p
                 df_table[title] = df_table[title].apply(lambda x: round(x, 2))
                 df_table['% Change'] = df_table['% Change'].apply(lambda x: round(x, 2))
 

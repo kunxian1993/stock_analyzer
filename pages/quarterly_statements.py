@@ -85,7 +85,7 @@ layout = html.Div(
                         className="menu"
                 ),
                 html.Div(
-                        html.Div(dash_table.DataTable(id='growth-table-q', merge_duplicate_headers=True), className='card'),
+                        html.Div(dash_table.DataTable(id='growth-table-q', merge_duplicate_headers=True, style_cell={'textAlign': 'center'}), className='card'),
                         className='wrapper'
                 ),
                 html.Div(
@@ -124,9 +124,7 @@ def update_dropdown(n_clicks_A, n_clicks_B, selected_stock_A, selected_stock_B):
                                 s_cf = stock_object.quarterly_cashflow
                                 
                                 # combine statements and transpose
-                                df1 = pd.concat([s_is,s_bs,s_cf], keys=['IncomeStatement','BalanceSheet','CashFlow'], names=['Source', 'Line-Item'])
-                                df1 = df1.reset_index().set_index('Line-Item').drop(['Source'], axis=1)
-                                df1 = df1.transpose()
+                                df1 = pd.concat([s_is,s_bs,s_cf]).transpose()
 
                                 df1['Date']=df1.index
                                 df1['Ticker']=selected_stock
@@ -201,6 +199,10 @@ def update_graph(n_clicks_A, n_clicks_B, stock_data, selected_metric, selected_d
                 # merge back to raw data to get metric values and pivot
                 df2 = df2.merge(df, how='left', on=['Quarter','Ticker'])
                 df_table=df2.pivot(index='Quarter', columns='Ticker', values=[title, '% Change'])
+
+                # round values to 2 d.p
+                df_table[title] = df_table[title].apply(lambda x: round(x, 2))
+                df_table['% Change'] = df_table['% Change'].apply(lambda x: round(x, 2))
 
                 stock_A = df_table.columns[0][1]
                 stock_B = df_table.columns[1][1]
