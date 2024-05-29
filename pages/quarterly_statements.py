@@ -117,8 +117,17 @@ def update_dropdown(n_clicks_A, n_clicks_B, selected_stock_A, selected_stock_B):
                 for selected_stock in [selected_stock_A, selected_stock_B]:
                         if selected_stock != None:
                                 stock_object = yf.Ticker(selected_stock)
-                                df1 = stock_object.quarterly_income_stmt
+
+                                # pull financial statements
+                                s_is = stock_object.quarterly_income_stmt
+                                s_bs = stock_object.quarterly_balancesheet
+                                s_cf = stock_object.quarterly_cashflow
+                                
+                                # combine statements and transpose
+                                df1 = pd.concat([s_is,s_bs,s_cf], keys=['IncomeStatement','BalanceSheet','CashFlow'], names=['Source', 'Line-Item'])
+                                df1 = df1.reset_index().set_index('Line-Item').drop(['Source'], axis=1)
                                 df1 = df1.transpose()
+
                                 df1['Date']=df1.index
                                 df1['Ticker']=selected_stock
 

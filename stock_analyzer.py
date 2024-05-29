@@ -7,9 +7,7 @@ app.layout = html.Div([
     html.Div(
         children=[
             dcc.Link(f"Income Statement - Yearly", href="/", style={'color': '#FFFFFF', 'margin-left': '10px', 'margin-right': '10px'}),
-            dcc.Link(f"Income Statement - Quarterly", href="quarterly-income-statement", style={'color': '#FFFFFF', 'margin-left': '10px', 'margin-right': '10px'}),
-            dcc.Link(f"Cash Flow - Yearly", href="yearly-cashflow", style={'color': '#FFFFFF', 'margin-left': '10px', 'margin-right': '10px'}),
-            dcc.Link(f"Cash Flow - Quarterly", href="quarterly-cashflow", style={'color': '#FFFFFF', 'margin-left': '10px', 'margin-right': '10px'})
+            dcc.Link(f"Income Statement - Quarterly", href="quarterly-statements", style={'color': '#FFFFFF', 'margin-left': '10px', 'margin-right': '10px'})
         ],
         className="nav-bar"
     ),
