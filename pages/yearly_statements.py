@@ -77,7 +77,8 @@ layout = html.Div(
                                                         id='yaxis-column-denominator',
                                                         value='None',
                                                         className="dropdown"
-                                                )                                             
+                                                ),
+                                                html.Button('NONE', id='none-button', n_clicks=0, className='Submit-button')                                             
                                         ],
                                         style={'width': '30%', 'height': '25%', 'font-size': '16px', 'margin-top': '5px'}
                                 )
@@ -103,7 +104,6 @@ layout = html.Div(
 @callback(
     Output('yaxis-column', 'options'),
     Output('yaxis-column-denominator', 'options'),
-    Output('yaxis-column-denominator', 'value'),
     Output('stock-data', 'data'),
     Input('text-submit-button-A', 'n_clicks'),
     Input('text-submit-button-B', 'n_clicks'),
@@ -155,7 +155,14 @@ def update_dropdown(n_clicks_A, n_clicks_B, selected_stock_A, selected_stock_B):
                 # convert df to json for keeping in dcc store
                 stock_data = df.to_dict('records')
 
-                return options, options, 'None', stock_data
+                return options, options, stock_data
+
+# callback for user interaction
+@callback(
+    Output('yaxis-column-denominator', 'value'),
+    Input('none-button', 'n_clicks'))
+def update_denominator(n_clicks_A):
+                return 'None'
 
 # callback for user interaction
 @callback(
