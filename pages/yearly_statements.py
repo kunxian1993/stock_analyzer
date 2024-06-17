@@ -9,7 +9,7 @@ import plotly.express as px
 
 # app = Dash(__name__)
 
-register_page(__name__, path='/')
+register_page(__name__)
 
 layout = html.Div(
         children=[

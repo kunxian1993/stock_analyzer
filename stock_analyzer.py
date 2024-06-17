@@ -6,8 +6,9 @@ app = Dash(__name__, use_pages=True)
 app.layout = html.Div([
     html.Div(
         children=[
-            dcc.Link(f"Income Statement - Yearly", href="/", style={'color': '#FFFFFF', 'margin-left': '10px', 'margin-right': '10px'}),
-            dcc.Link(f"Income Statement - Quarterly", href="quarterly-statements", style={'color': '#FFFFFF', 'margin-left': '10px', 'margin-right': '10px'})
+            dcc.Link(f"Home Page", href="/", style={'color': '#FFFFFF', 'margin-left': '10px', 'margin-right': '10px'}),
+            dcc.Link(f"Yearly Statements", href="yearly-statements", style={'color': '#FFFFFF', 'margin-left': '10px', 'margin-right': '10px'}),
+            dcc.Link(f"Quarterly Statements", href="quarterly-statements", style={'color': '#FFFFFF', 'margin-left': '10px', 'margin-right': '10px'})
         ],
         className="nav-bar"
     ),
