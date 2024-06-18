@@ -27,7 +27,7 @@ layout = html.Div(
                                         children=[
                                                 # ticker input textbox
                                                 dcc.Store(id='stock-data-home'),
-                                                html.Div(children="Stock Ticker A", className="menu-title"),
+                                                html.Div(children="Enter ticker:", className="menu-title"),
                                                 html.Div(
                                                         dcc.Input(
                                                                 id='input-stock-A-home',
@@ -38,19 +38,19 @@ layout = html.Div(
                                                 ),
                                                 html.Button('SUBMIT', id='text-submit-button-A-home', n_clicks=0, className='Submit-button'),
                                         ],
-                                        style={'width': '13%', 'height': '25%', 'font-size': '16px', 'margin-top': '5px'}
-                                )
+                                        style={'width': '25%', 'height': '25%', 'font-size': '16px', 'margin-top': '5px'}
+                                )                                
                         ],
                         className="menu"
                 ),
                 html.Div(
                         html.Div(dash_table.DataTable(id='growth-table-home', style_cell={'textAlign': 'center'}), className='card'),
                         className='wrapper'
+                ),
+                html.Div(
+                        html.Div(dcc.Graph(id='stock-trend-chart-home'), className='card'),
+                        className='wrapper'
                 )
-                # html.Div(
-                #         html.Div(dcc.Graph(id='stock-trend-chart-home'), className='card'),
-                #         className='wrapper'
-                # )
         ]
 )
 
@@ -109,7 +109,7 @@ def update_dropdown(n_clicks_A, selected_stock_A):
 
 # callback for user interaction
 @callback(
-#     Output('stock-trend-chart-home', 'figure'),
+    Output('stock-trend-chart-home', 'figure'),
     Output('growth-table-home', 'data'),
     Output('growth-table-home', 'columns'),
     Output('growth-table-home', 'style_data_conditional'),
@@ -152,7 +152,13 @@ def update_graph(n_clicks_A, stock_data):
                 df4[value_cols] = df4[value_cols].astype(float).round(2)
                 df4 = df4.sort_values(by=['Metric'])
                 df4 = df4.drop(['Source'],axis=1)
-                                
+
+                # df for line chart
+                df5 = pd.concat([df1[key_metrics[:-1]], df2, df3], axis = 1)
+                df5 = pd.melt(df5.reset_index(),id_vars=['Year'],value_vars=list(df5.columns),var_name='Metric', value_name='Value')
+
+                fig = px.line(df5,x='Year',y='Value', color='Metric', markers=True)
+
                 # conditional format for table
                 conditional_format = [
                                         {
@@ -171,7 +177,7 @@ def update_graph(n_clicks_A, stock_data):
                                         }
                                         ]
 
-                return df4.to_dict('records'), [{'name': str(i), 'id': str(i)} for i in df4.columns], conditional_format
+                return fig, df4.to_dict('records'), [{'name': str(i), 'id': str(i)} for i in df4.columns], conditional_format
 
 # if __name__ == '__main__':
 #     app.run(debug=True)
