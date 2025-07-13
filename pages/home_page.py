@@ -204,6 +204,7 @@ def update_graph(n_clicks_A, stock_data):
                                 rule_green = {
                                         'if': {
                                                 'filter_query': f'{{{cols[i]}}} > {{{cols[i-1]}}}',
+                                                'row_index': 'even',
                                                 'column_id': f'{cols[i]}'
                                         },
                                         # 'color': '#00B050'
@@ -212,6 +213,7 @@ def update_graph(n_clicks_A, stock_data):
                                 rule_red = {
                                         'if': {
                                                 'filter_query': f'{{{cols[i]}}} < {{{cols[i-1]}}}',
+                                                'row_index': 'even',
                                                 'column_id': f'{cols[i]}'
                                         },
                                         # 'color': "#FFFFFF",
@@ -286,6 +288,7 @@ def update_graph(n_clicks_A, stock_data):
                                 rule_green = {
                                         'if': {
                                                 'filter_query': f'{{{cols[i]}}} > {{{cols[i-1]}}}',
+                                                'row_index': 'even',
                                                 'column_id': f'{cols[i]}'
                                         },
                                         # 'color': '#00B050'
@@ -294,6 +297,7 @@ def update_graph(n_clicks_A, stock_data):
                                 rule_red = {
                                         'if': {
                                                 'filter_query': f'{{{cols[i]}}} < {{{cols[i-1]}}}',
+                                                'row_index': 'even',
                                                 'column_id': f'{cols[i]}'
                                         },
                                         # 'color': "#FFFFFF",
