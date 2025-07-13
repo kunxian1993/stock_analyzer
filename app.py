@@ -20,7 +20,7 @@ app.layout = html.Div([
                     html.P(children="Analyze Stock Data", className="header-description")
             ],
             className="header"
-    ),
+    ),  
 
 
     dash.page_container
